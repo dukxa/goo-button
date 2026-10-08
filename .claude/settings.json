@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:e2e*)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm build)",
+      "Bash(pnpm build:demo)",
+      "Bash(pnpm test:full)",
+      "Bash(pnpm browser-support)",
+      "Bash(pnpm demo)",
+      "Bash(node --test*)",
+      "Bash(git diff*)",
+      "Bash(git status*)",
+      "Bash(git log*)"
+    ],
+    "deny": [
+      "Bash(npm publish*)",
+      "Bash(pnpm publish*)",
+      "Bash(pnpm pack:lib)",
+      "Bash(git push*)"
+    ]
+  }
+}
