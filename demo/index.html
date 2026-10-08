@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f7f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0d0f" media="(prefers-color-scheme: dark)">
+<meta name="description" content="goo-button is a button that stretches out a drop on a spring. Try it live and copy the code">
+<meta property="og:type" content="website">
+<meta property="og:title" content="goo-button: demo and code generator">
+<meta property="og:description" content="A button that stretches out a drop on a spring. Try it live and copy the code">
+<meta name="twitter:card" content="summary">
+<title>goo-button: demo and code generator</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="src/app.css" fetchpriority="high">
+<link rel="preload" href="assets/fonts/manrope-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/google-sans-flex-rond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/google-sans-code-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts.css">
+<script src="src/theme-init.js"></script>
+<script type="module" src="src/app.js"></script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="icon-arrow" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"/></symbol>
+  <symbol id="icon-lightbulb" viewBox="0 0 256 256"><path d="M176,232a12,12,0,0,1-12,12H88a12,12,0,0,1,0-24h80A12,12,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.65,71.65,0,0,0,27.64,56.3A32,32,0,0,1,96,186v6h64v-6a32.15,32.15,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Zm-16.11-9.34a57.6,57.6,0,0,0-46.56-46.55,8,8,0,0,0-2.66,15.78c16.57,2.79,30.63,16.85,33.44,33.45A8,8,0,0,0,176,104a9,9,0,0,0,1.35-.11A8,8,0,0,0,183.89,94.66Z"/></symbol>
+  <symbol id="icon-lightbulb-filament" viewBox="0 0 256 256"><path d="M176,232a12,12,0,0,1-12,12H88a12,12,0,0,1,0-24h80A12,12,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.5C39.74,56.83,78.26,17.15,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.64,71.64,0,0,0,27.64,56.3h0A32,32,0,0,1,96,186v6h24V147.31L90.34,117.66a8,8,0,0,1,11.32-11.32L128,132.69l26.34-26.35a8,8,0,0,1,11.32,11.32L136,147.31V192h24v-6a32.12,32.12,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Z"/></symbol>
+  <symbol id="icon-copy" viewBox="0 0 256 256"><path d="M216,28H88A12,12,0,0,0,76,40V76H40A12,12,0,0,0,28,88V216a12,12,0,0,0,12,12H168a12,12,0,0,0,12-12V180h36a12,12,0,0,0,12-12V40A12,12,0,0,0,216,28ZM156,204H52V100H156Zm48-48H180V88a12,12,0,0,0-12-12H100V52H204Z"/></symbol>
+  <symbol id="icon-check" viewBox="0 0 256 256"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
+  <symbol id="icon-reset" viewBox="0 0 256 256"><path d="M228,128a100,100,0,0,1-98.66,100H128a99.39,99.39,0,0,1-68.62-27.29,12,12,0,0,1,16.48-17.45,76,76,0,1,0-1.57-109c-.13.13-.25.25-.39.37L54.89,92H72a12,12,0,0,1,0,24H24a12,12,0,0,1-12-12V56a12,12,0,0,1,24,0V76.72L57.48,57.06A100,100,0,0,1,228,128Z"/></symbol>
+  <symbol id="icon-chevron" viewBox="0 0 256 256"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></symbol>
+  <symbol id="icon-github" viewBox="0 0 256 256"><path d="M212.62,75.17A63.7,63.7,0,0,0,206.39,26,12,12,0,0,0,196,20a63.71,63.71,0,0,0-50,24H126A63.71,63.71,0,0,0,76,20a12,12,0,0,0-10.39,6,63.7,63.7,0,0,0-6.23,49.17A61.5,61.5,0,0,0,52,104v8a60.1,60.1,0,0,0,45.76,58.28A43.66,43.66,0,0,0,92,192v4H76a20,20,0,0,1-20-20,44.05,44.05,0,0,0-44-44,12,12,0,0,0,0,24,20,20,0,0,1,20,20,44.05,44.05,0,0,0,44,44H92v12a12,12,0,0,0,24,0V192a20,20,0,0,1,40,0v40a12,12,0,0,0,24,0V192a43.66,43.66,0,0,0-5.76-21.72A60.1,60.1,0,0,0,220,112v-8A61.5,61.5,0,0,0,212.62,75.17ZM196,112a36,36,0,0,1-36,36H112a36,36,0,0,1-36-36v-8a37.87,37.87,0,0,1,6.13-20.12,11.65,11.65,0,0,0,1.58-11.49,39.9,39.9,0,0,1-.4-27.72,39.87,39.87,0,0,1,26.41,17.8A12,12,0,0,0,119.82,68h32.35a12,12,0,0,0,10.11-5.53,39.84,39.84,0,0,1,26.41-17.8,39.9,39.9,0,0,1-.4,27.72,12,12,0,0,0,1.61,11.53A37.85,37.85,0,0,1,196,104Z"/></symbol>
+  <symbol id="icon-sun" viewBox="0 0 256 256"><path d="M116,36V20a12,12,0,0,1,24,0V36a12,12,0,0,1-24,0Zm80,92a68,68,0,1,1-68-68A68.07,68.07,0,0,1,196,128Zm-24,0a44,44,0,1,0-44,44A44.05,44.05,0,0,0,172,128ZM51.51,68.49a12,12,0,1,0,17-17l-12-12a12,12,0,0,0-17,17Zm0,119-12,12a12,12,0,0,0,17,17l12-12a12,12,0,1,0-17-17ZM196,72a12,12,0,0,0,8.49-3.51l12-12a12,12,0,0,0-17-17l-12,12A12,12,0,0,0,196,72Zm8.49,115.51a12,12,0,0,0-17,17l12,12a12,12,0,0,0,17-17ZM48,128a12,12,0,0,0-12-12H20a12,12,0,0,0,0,24H36A12,12,0,0,0,48,128Zm80,80a12,12,0,0,0-12,12v16a12,12,0,0,0,24,0V220A12,12,0,0,0,128,208Zm108-92H220a12,12,0,0,0,0,24h16a12,12,0,0,0,0-24Z"/></symbol>
+  <symbol id="icon-moon" viewBox="0 0 256 256"><path d="M236.37,139.4a12,12,0,0,0-12-3A84.07,84.07,0,0,1,119.6,31.59a12,12,0,0,0-15-15A108.86,108.86,0,0,0,49.69,55.07,108,108,0,0,0,136,228a107.09,107.09,0,0,0,64.93-21.69,108.86,108.86,0,0,0,38.44-54.94A12,12,0,0,0,236.37,139.4Zm-49.88,47.74A84,84,0,0,1,68.86,69.51,84.93,84.93,0,0,1,92.27,48.29Q92,52.13,92,56A108.12,108.12,0,0,0,200,164q3.87,0,7.71-.27A84.79,84.79,0,0,1,186.49,187.14Z"/></symbol>
+  <symbol id="icon-warning" viewBox="0 0 256 256"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></symbol>
+</svg>
+
+<header class="header enter-section enter-section--1">
+  <div class="logo"><h1>goo-button</h1><span class="version"><span class="sr-only">version </span>1.2.4</span></div>
+  <div class="header-actions">
+    <button type="button" class="icon-button theme-button" id="theme-button" data-mode="light" aria-label="Dark theme" aria-pressed="false">
+      <span class="theme-icons"><svg class="sun-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-sun"/></svg><svg class="moon-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-moon"/></svg></span>
+    </button>
+    <span class="divider" aria-hidden="true"></span>
+    <a class="icon-button github-button" href="https://github.com/dukxa/goo-button" aria-label="GitHub repository">
+      <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-github"/></svg>
+    </a>
+  </div>
+</header>
+
+<noscript>
+  <div class="noscript">
+    <svg class="noscript-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-warning"/></svg>
+    <p>This page needs JavaScript to build the live button and its controls. Enable JavaScript in your browser, then reload the page</p>
+  </div>
+</noscript>
+
+<main class="layout">
+  <div class="output">
+    <section class="stage card enter-section enter-section--2" id="stage" aria-label="Preview">
+      <div class="stage-scroll">
+        <button type="button" data-goo id="demo">
+          Press me
+          <svg slot="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-arrow"/></svg>
+        </button>
+      </div>
+      <button type="button" class="icon-button bulb-button" id="bulb-button" aria-label="Light preview background" aria-pressed="false">
+        <svg class="bulb-off" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-lightbulb"/></svg>
+        <svg class="bulb-on" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-lightbulb-filament"/></svg>
+      </button>
+    </section>
+
+    <h2 class="sr-only">Use it</h2>
+    <section class="code-card card enter-section enter-section--3">
+      <h3 id="html-title">HTML</h3>
+      <button type="button" class="icon-button copy-button" data-copy-target="code-html" data-label="HTML code" aria-label="Copy HTML">
+        <svg class="copy-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-copy"/></svg>
+        <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-check"/></svg>
+      </button>
+      <pre class="code-body"><code id="code-html" data-lang="html"></code></pre>
+    </section>
+
+    <section class="code-card card enter-section enter-section--4">
+      <h3 id="cdn-title">CDN (jsDelivr)</h3>
+      <button type="button" class="icon-button copy-button" data-copy-target="code-cdn" data-label="CDN snippet" aria-label="Copy CDN snippet">
+        <svg class="copy-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-copy"/></svg>
+        <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-check"/></svg>
+      </button>
+      <pre class="code-body"><code id="code-cdn" data-lang="html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/goo-button@1.2.4/goo-button.min.js"&gt;&lt;/script&gt;</code></pre>
+    </section>
+
+    <section class="code-card card enter-section enter-section--5">
+      <h3 id="pnpm-title">pnpm</h3>
+      <button type="button" class="icon-button copy-button" data-copy-target="code-pnpm" data-label="install command" aria-label="Copy install command">
+        <svg class="copy-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-copy"/></svg>
+        <svg class="check-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-check"/></svg>
+      </button>
+      <pre class="code-body"><code id="code-pnpm" data-lang="sh">pnpm add goo-button</code></pre>
+    </section>
+  </div>
+
+  <section class="controls" aria-labelledby="customize-title">
+    <div class="controls-header enter-section enter-section--6">
+      <h2 id="customize-title">Customize</h2>
+      <button type="button" class="icon-button reset-button" id="reset-button" aria-label="Reset to defaults">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-reset"/></svg>
+      </button>
+    </div>
+
+    <div class="switch card enter-section enter-section--7">
+      <div class="switch-row">
+        <span class="switch-text">
+          <label class="switch-title" for="calm-motion">Calm motion</label>
+          <span class="switch-hint" id="calm-motion-hint">No bounce or overshoot. Follows your system setting until changed</span>
+        </span>
+        <input type="checkbox" role="switch" class="toggle" id="calm-motion" aria-describedby="calm-motion-hint">
+      </div>
+      <div class="switch-row">
+        <span class="switch-text">
+          <label class="switch-title" for="keep-open">Keep the drop out</label>
+          <span class="switch-hint" id="keep-open-hint">Shows the drop without hovering</span>
+        </span>
+        <input type="checkbox" role="switch" class="toggle" id="keep-open" aria-describedby="keep-open-hint">
+      </div>
+    </div>
+
+    <div class="accordion card enter-section enter-section--8">
+      <div class="accordion-item" data-open>
+        <h3 class="accordion-heading">
+          <button type="button" class="accordion-trigger" id="shape-trigger" aria-expanded="true" aria-controls="shape-panel">
+            <span>Shape</span>
+            <svg class="accordion-chevron" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </button>
+        </h3>
+        <div class="accordion-panel" id="shape-panel" role="region" aria-labelledby="shape-trigger"><div class="accordion-content rows" data-group="shape"></div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-heading">
+          <button type="button" class="accordion-trigger" id="drop-trigger" aria-expanded="false" aria-controls="drop-panel">
+            <span>Drop</span>
+            <svg class="accordion-chevron" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </button>
+        </h3>
+        <div class="accordion-panel" id="drop-panel" role="region" aria-labelledby="drop-trigger"><div class="accordion-content rows" data-group="drop"></div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-heading">
+          <button type="button" class="accordion-trigger" id="press-trigger" aria-expanded="false" aria-controls="press-panel">
+            <span>Press and focus</span>
+            <svg class="accordion-chevron" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </button>
+        </h3>
+        <div class="accordion-panel" id="press-panel" role="region" aria-labelledby="press-trigger"><div class="accordion-content rows" data-group="press"></div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-heading">
+          <button type="button" class="accordion-trigger" id="motion-trigger" aria-expanded="false" aria-controls="motion-panel">
+            <span>Motion</span>
+            <svg class="accordion-chevron" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </button>
+        </h3>
+        <div class="accordion-panel" id="motion-panel" role="region" aria-labelledby="motion-trigger"><div class="accordion-content rows" data-group="motion"></div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-heading">
+          <button type="button" class="accordion-trigger" id="color-trigger" aria-expanded="false" aria-controls="color-panel">
+            <span>Color</span>
+            <svg class="accordion-chevron" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </button>
+        </h3>
+        <div class="accordion-panel" id="color-panel" role="region" aria-labelledby="color-trigger"><div class="accordion-content rows pickers" data-group="color"></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer enter-section enter-section--9">
+    <p>
+    Icons by <a href="https://github.com/phosphor-icons/homepage" target="_blank" rel="noopener noreferrer">Phosphor Icons<span class="sr-only"> (opens in new tab)</span></a>.
+    Fonts:
+    <a href="https://github.com/googlefonts/googlesans-flex" target="_blank" rel="noopener noreferrer">Google Sans Flex<span class="sr-only"> (opens in new tab)</span></a>,
+    <a href="https://github.com/googlefonts/googlesans-code" target="_blank" rel="noopener noreferrer">Google Sans Code<span class="sr-only"> (opens in new tab)</span></a>
+    and
+    <a href="https://github.com/googlefonts/manrope" target="_blank" rel="noopener noreferrer">Manrope<span class="sr-only"> (opens in new tab)</span></a>.
+    Syntax highlighting by <a href="https://github.com/PrismJS/prism" target="_blank" rel="noopener noreferrer">PrismJS<span class="sr-only"> (opens in new tab)</span></a>.
+    </p>
+  <p class="sig">&gt;D&lt;</p>
+</footer>
+
+<p class="sr-only" id="status" role="status"></p>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "goo-button-repo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.10.1+sha512.ba40a37eb1a370d60fea8c4cf1d364c13bcccef518e98ad2bcee954f539d38da37458e58261a3fa55e06523450ea0ffff9f497b135be41f2c15c1642bacace6c",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node tools/build/build.mjs",
+    "build:demo": "node tools/build/build-demo.mjs",
+    "demo": "node tools/dev/serve.mjs",
+    "test": "node --test \"test/*.test.mjs\"",
+    "test:e2e": "playwright test",
+    "test:e2e:no-firefox": "playwright test --project=chromium --project=webkit",
+    "test:full": "pnpm test && pnpm typecheck && pnpm build && pnpm test:e2e:no-firefox",
+    "typecheck": "tsc -p tsconfig.types.json && tsc -p tsconfig.json",
+    "browser-support": "node tools/analysis/browser-support.mjs",
+    "pack:lib": "pnpm --filter goo-button pack"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@mdn/browser-compat-data": "^8.1.4",
+    "@playwright/test": "^1.63.0",
+    "caniuse-lite": "^1.0.30001815",
+    "esbuild": "0.28.2",
+    "prismjs": "1.30.0",
+    "typescript": "^7.0.2"
+  }
+}

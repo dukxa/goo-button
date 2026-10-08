@@ -1,0 +1,29 @@
+{
+  "name": "goo-button",
+  "version": "1.2.4",
+  "description": "A button that pulls a drop out of its edge on a spring. An ES module that decorates any <button> or role=\"button\" marked with [data-goo]: no custom element, no shadow DOM, your other buttons are untouched.",
+  "keywords": ["button", "animation", "spring", "es-module", "progressive-enhancement"],
+  "license": "MIT",
+  "author": "Dukxa",
+  "repository": { "type": "git", "url": "git+https://github.com/dukxa/goo-button.git", "directory": "package" },
+  "homepage": "https://github.com/dukxa/goo-button#readme",
+  "bugs": "https://github.com/dukxa/goo-button/issues",
+  "type": "module",
+  "main": "./src/goo-button.js",
+  "module": "./src/goo-button.js",
+  "types": "./src/goo-button.d.ts",
+  "unpkg": "./goo-button.min.js",
+  "jsdelivr": "./goo-button.min.js",
+  "exports": {
+    ".": { "types": "./src/goo-button.d.ts", "default": "./src/goo-button.js" },
+    "./min": { "types": "./src/goo-button.d.ts", "default": "./goo-button.min.js" },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": true,
+  "files": ["src/goo-button.js", "src/dom.js", "src/tokens.js", "src/shape.js", "src/spring.js", "src/goo-button.d.ts", "goo-button.min.js"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "prepack": "node ../tools/build/prepack.mjs",
+    "prepublishOnly": "node ../tools/build/build.mjs && git diff --exit-code"
+  }
+}

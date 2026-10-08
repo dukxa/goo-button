@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["dom", "es2022"],
+    "strict": true,
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": true,
+    "skipLibCheck": true
+  },
+  "files": [
+    "package/src/goo-button.js",
+    "package/src/dom.js",
+    "package/src/tokens.js",
+    "package/src/shape.js",
+    "package/src/spring.js"
+  ]
+}
