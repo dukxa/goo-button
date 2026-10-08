@@ -24,6 +24,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build demo (bundles goo-button into demo/src for same-origin CSP)
+        run: pnpm build:demo
+
       - name: Upload demo folder as Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

@@ -13,3 +13,16 @@ await build({
   target: 'es2022',
   legalComments: 'none',
 });
+
+// bundle goo-button itself into the demo so it's served same-origin
+// (the demo page's strict CSP only allows script-src 'self', so it can't
+// load the library from a CDN or from outside the published demo/ folder)
+await build({
+  entryPoints: [resolvePath('../../package/src/goo-button.js')],
+  outfile: resolvePath('../../demo/src/goo-button.js'),
+  bundle: true,
+  format: 'esm',
+  minify: false,
+  target: 'es2022',
+  legalComments: 'none',
+});

@@ -22,3 +22,5 @@ package/LICENSE
 # Logs
 npm-debug.log*
 pnpm-debug.log*
+
+demo/src/goo-button.js

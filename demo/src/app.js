@@ -1,4 +1,4 @@
-import { GooButton } from '../../package/src/goo-button.js';
+import { GooButton } from './goo-button.js';
 import { highlight } from './highlight.min.js';
 
 const byId = (id) => document.getElementById(id);
