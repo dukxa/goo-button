@@ -10,7 +10,7 @@ Each option is a `data-goo-<name>` attribute on the button. All of them except `
 | `data-goo-padding-x` / `data-goo-padding-y` | Padding | `2` / `1` | × text size |
 | `data-goo-icon-size` | Icon size | `1` | × text size |
 | `data-goo-gap` | Gap between button and drop | `0.16` | × height (0-2) |
-| `data-goo-neck-reach` | How far the neck stretches before it snaps | `0.72` | × height (0-4) |
+| `data-goo-neck-reach` | How far the neck stretches before it breaks | `0.72` | × height (0-4) |
 | `data-goo-fill-color` | Button, drop and focus ring color | `light-dark(oklch(0.2 0.04 200), oklch(0.94 0.03 200))` | any CSS color |
 | `data-goo-text-color` | Label and icon color | `light-dark(oklch(97% 0 0), oklch(15% 0 0))` | any CSS color |
 | `data-goo-press-scale` | Scale while pressed | `0.96` | 0.5-1.5 |

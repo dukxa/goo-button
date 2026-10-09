@@ -2,7 +2,7 @@
 
 A button that pulls a drop out of its edge on hover or focus, with your icon riding inside it. It's an ES module, not a custom element: it decorates any real `<button>` (or `role="button"`) marked with `data-goo` and leaves your other buttons alone. Where the module can't run, the plain button stays.
 
-- **Size.** <!--size:min-->14676 B<!--/size--> minified, <!--size:gzip-->6072 B<!--/size--> gzip, <!--size:brotli-->5416 B<!--/size--> brotli (v0.1.0). See the [FAQ](docs/faq.md) for what's in those bytes.
+- **Size.** <!--size:min-->14676 B<!--/size--> minified, <!--size:gzip-->6072 B<!--/size--> gzip, <!--size:brotli-->5416 B<!--/size--> brotli (v1.2.4). See the [FAQ](docs/faq.md) for what's in those bytes.
 - **A real button.** Forms, keyboard and screen readers work as with any `<button>`. The element isn't replaced and there's no new tag.
 - **No dependencies.** No network requests, fonts, icons, `innerHTML` or `eval`.
 - **Strict CSP.** No inline styles in the markup. Styles come from a constructed stylesheet. It runs under Trusted Types, and attribute values are checked before they reach CSS.

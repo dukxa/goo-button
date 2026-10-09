@@ -38,7 +38,7 @@ await build({
 });
 
 const code = readFileSync(outFile);
-const versionPin = [new RegExp(`${name}@\\d+\\.\\d+\\.\\d+`, 'g'), `${name}@${version}`];
+const versionPin = [new RegExp(`(${name}@|\\(v)\\d+\\.\\d+\\.\\d+`, 'g'), `$1${version}`];
 
 const syncFile = (file, replacements) => {
   let text = readFileSync(resolvePath(`../../${file}`), 'utf8');
@@ -52,7 +52,7 @@ const sizes = { min: code.length, gzip: gzipSync(code, { level: 9 }).length, bro
 const sizeMarker = (key) => [new RegExp(`(<!--size:${key}-->)[^<]*(<!--/size-->)`, 'g'), `$1${sizes[key].toLocaleString('en-US').replace(/,/g, '')} B$2`];
 const sizeFiles = ['docs/faq.md', 'README.md'];
 for (const file of sizeFiles) {
-  try { syncFile(file, [sizeMarker('min'), sizeMarker('gzip'), sizeMarker('brotli')]); } catch (error) { if (error.code !== 'ENOENT') throw error; } // not every checkout has docs/faq.md
+  try { syncFile(file, [sizeMarker('min'), sizeMarker('gzip'), sizeMarker('brotli'), versionPin]); } catch (error) { if (error.code !== 'ENOENT') throw error; } // not every checkout has docs/faq.md
 }
 
 console.log(`${name}@${version}`);

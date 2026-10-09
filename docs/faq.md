@@ -16,7 +16,7 @@ What it doesn't do: it doesn't mirror the drop for RTL, and it doesn't reserve s
 
 ## Why does a button weigh 6 KB
 
-Numbers for v0.1.0:
+Numbers for v1.2.4:
 
 | Form | Size |
 | --- | --- |
