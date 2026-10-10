@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium webkit
+
       - name: Ensure npm supports trusted publishing
         run: npm install -g npm@latest
 
