@@ -88,15 +88,15 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: var(--font-heading); fo
 }
 
 .enter-section--1 { animation-delay: 0ms; }
-.enter-section--2 { animation-delay: 100ms; }
-.enter-section--3 { animation-delay: 200ms; }
-.enter-section--4 { animation-delay: 300ms; }
-.enter-section--5 { animation-delay: 400ms; }
-.enter-section--6 { animation-delay: 500ms; }
-.enter-section--7 { animation-delay: 600ms; }
-.enter-section--8 { animation-delay: 700ms; }
-.enter-section--9 { animation-delay: 800ms; }
-.enter-section--10 { animation-delay: 900ms; }
+.enter-section--2 { animation-delay: 60ms; }
+.enter-section--3 { animation-delay: 120ms; }
+.enter-section--4 { animation-delay: 180ms; }
+.enter-section--5 { animation-delay: 240ms; }
+.enter-section--6 { animation-delay: 300ms; }
+.enter-section--7 { animation-delay: 360ms; }
+.enter-section--8 { animation-delay: 420ms; }
+.enter-section--9 { animation-delay: 480ms; }
+.enter-section--10 { animation-delay: 540ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .enter-section {

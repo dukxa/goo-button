@@ -20,9 +20,9 @@ Numbers for v1.2.4:
 
 | Form | Size |
 | --- | --- |
-| minified | <!--size:min-->17779 B<!--/size--> |
-| gzip | <!--size:gzip-->7334 B<!--/size--> |
-| brotli | <!--size:brotli-->6526 B<!--/size--> |
+| minified | <!--size:min-->17753 B<!--/size--> |
+| gzip | <!--size:gzip-->7335 B<!--/size--> |
+| brotli | <!--size:brotli-->6549 B<!--/size--> |
 
 The browser downloads the gzip or brotli version, so 5 or 6 KB. The file holds everything the button needs to work without any outside files:
 

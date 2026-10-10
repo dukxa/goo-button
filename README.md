@@ -2,7 +2,7 @@
 
 A button that pulls a drop out of its edge on hover or focus, with your icon riding inside it. It's an ES module, not a custom element: it decorates any real `<button>` (or `role="button"`) marked with `data-goo` and leaves your other buttons alone. Where the module can't run, the plain button stays.
 
-- **Size.** <!--size:min-->17779 B<!--/size--> minified, <!--size:gzip-->7334 B<!--/size--> gzip, <!--size:brotli-->6526 B<!--/size--> brotli (v1.2.4). See the [FAQ](docs/faq.md) for what's in those bytes.
+- **Size.** <!--size:min-->17753 B<!--/size--> minified, <!--size:gzip-->7335 B<!--/size--> gzip, <!--size:brotli-->6549 B<!--/size--> brotli (v1.3.0). See the [FAQ](docs/faq.md) for what's in those bytes.
 - **A real button.** Forms, keyboard and screen readers work as with any `<button>`. The element isn't replaced and there's no new tag.
 - **No dependencies.** No network requests, fonts, icons, `innerHTML` or `eval`.
 - **Strict CSP.** No inline styles in the markup. Styles come from a constructed stylesheet. It runs under Trusted Types, and attribute values are checked before they reach CSS.
@@ -12,7 +12,7 @@ A button that pulls a drop out of its edge on hover or focus, with your icon rid
 
 ```html
 <script type="module"
-        src="https://cdn.jsdelivr.net/npm/goo-button@1.2.4/goo-button.min.js"></script>
+        src="https://cdn.jsdelivr.net/npm/goo-button@1.3.0/goo-button.min.js"></script>
 
 <button type="button" data-goo data-goo-fill-color="oklch(0.5 0.2 260)">
   Open
@@ -30,7 +30,7 @@ Load the module from a CDN. Pin an exact version, not `@latest` or a range.
 
 ```html
 <script type="module"
-        src="https://cdn.jsdelivr.net/npm/goo-button@1.2.4/goo-button.min.js"></script>
+        src="https://cdn.jsdelivr.net/npm/goo-button@1.3.0/goo-button.min.js"></script>
 ```
 
 Or install it from npm:

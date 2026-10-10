@@ -1,6 +1,6 @@
 const SVG_NS = 'http://www.w3.org/2000/svg';
 export const DISABLED = ':disabled, [aria-disabled="true"]';
-export const COLOR_EASE = 'var(--goo-color-time, 0s) cubic-bezier(0.23, 1, 0.32, 1)';
+export const COLOR_EASE = 'var(--goo-color-time, 0s) ease';
 export const ICON_FROM_SCALE = .9;
 
 /** @param {string} tag @param {string} [className] @param {boolean} [isSvg] @returns {HTMLElement | SVGElement} */
