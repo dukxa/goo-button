@@ -23,7 +23,11 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+        # deliberately no registry-url: it makes setup-node write an _authToken line to .npmrc from
+        # a NODE_AUTH_TOKEN secret we don't set, npm sends that empty token first, and the registry
+        # answers with a 404 before ever trying OIDC trusted publishing. With no registry-url, no
+        # .npmrc is written and npm publish falls through to OIDC on its own; it still defaults to
+        # registry.npmjs.org, which is where we publish anyway.
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
