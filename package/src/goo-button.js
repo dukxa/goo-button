@@ -2,6 +2,7 @@ import { clamp, fixed, neckPath, ringPath } from './shape.js';
 import { MAX_DELTA, MOTION, Spring } from './spring.js';
 import { adoptStyles, buildDom, COLOR_EASE, DISABLED, ICON_FROM_SCALE } from './dom.js';
 import { DATA_ATTRS, DELAY, DRIVEN, GEOMETRY_TOKENS, OPTIONS, parseValue, readToken, SPEC } from './tokens.js';
+import { clampLightnessForContrast, clampLightnessForLuminance, contrastFromLuminances, formatOklch, luminance, parseOklch, resolvedLuminance } from './contrast.js';
 /** @typedef {import('./tokens.js').DrivenName} DrivenName */
 
 const supported = typeof document !== 'undefined' && typeof ResizeObserver === 'function'
@@ -11,6 +12,13 @@ const supported = typeof document !== 'undefined' && typeof ResizeObserver === '
 
 const DEFAULT_GAP = .16, DEFAULT_REACH = .72;
 const FOCUS_RING = { offset: .375, min: .03125, fade: 2.5 };
+
+// WCAG 1.4.3 (text on fill) and 1.4.11 (fill on the page). The page leg has no way to read an
+// arbitrary ancestor's real background, so it checks against the same light/dark pair `light-dark()`
+// itself represents — a reasonable default, not a guarantee for a page with a tinted background.
+const WCAG_TEXT_RATIO = 4.5, WCAG_SURFACE_RATIO = 3;
+/** @type {{ light: [number, number, number], dark: [number, number, number] }} */
+const PAGE_SURFACE = { light: [1, 0, 0], dark: [0.2, 0.004, 260] };
 
 const SWAY = { gain: 5 / 64, max: 1 / 8 };
 
@@ -50,6 +58,9 @@ class Goo {
   #abort = new AbortController();
   #addedTabindex = false;
   #ownProps = new Set();
+  #wcagColor = false;
+  /** raw, as-authored values for fill-color/text-color, read back when `wcag-color` toggles on/off or either color changes */
+  #rawColor = { 'fill-color': /** @type {string | null} */ (null), 'text-color': /** @type {string | null} */ (null) };
 
   /** @param {HTMLElement} host */
   constructor(host) {
@@ -132,6 +143,12 @@ class Goo {
       this.#retune();
     } else if (name === 'open') {
       this.#setFlag('pinned', value !== null);
+    } else if (name === 'wcag-color') {
+      this.#wcagColor = value !== null;
+      this.#applyWcagColor();
+    } else if (name === 'fill-color' || name === 'text-color') {
+      this.#rawColor[name] = value;
+      this.#applyColor(name, value);
     } else {
       const prop = `--goo-${name}`, css = value === null ? null : parseValue(name, value);
       if (css === null && value?.trim()) console.warn(`goo-button: ${attr}="${value}" ignored (wrong type or out of the allowed form)`, this.#host);
@@ -140,6 +157,66 @@ class Goo {
       if (GEOMETRY_TOKENS.has(name)) { this.#readTokens(); this.#render(); }
     }
   }
+
+  /** @param {'fill-color' | 'text-color'} name @param {string | null} value */
+  #applyColor(name, value) {
+    const prop = `--goo-${name}`, css = value === null ? null : parseValue(name, value);
+    if (css === null && value?.trim()) console.warn(`goo-button: data-goo-${name}="${value}" ignored (wrong type or out of the allowed form)`, this.#host);
+    if (css !== null) { this.#host.style.setProperty(prop, css); this.#ownProps.add(prop); }
+    else this.#release(prop);
+    if (name === 'fill-color') this.#applyWcagColor();
+  }
+
+  // Keeps data-goo-fill-color / data-goo-text-color at a passing WCAG contrast while data-goo-wcag-color is set:
+  // fill against the page at 3:1 (1.4.11), label against fill at 4.5:1 (1.4.3). An oklch() value is adjusted in
+  // place (lightness only, toward the nearest pass). Any other color notation (hex, rgb, named, ...) can't be
+  // adjusted the same way without abandoning the author's intended color, so a failing one is only flagged.
+  #applyWcagColor() {
+    const fillRaw = this.#rawColor['fill-color'], textRaw = this.#rawColor['text-color'];
+    if (!this.#wcagColor || (!fillRaw && !textRaw)) return;
+    let fillOklch = fillRaw ? parseOklch(fillRaw) : null;
+    const textOklch = textRaw ? parseOklch(textRaw) : null;
+
+    if (fillOklch) {
+      fillOklch = clampLightnessForLuminance(fillOklch, luminance(this.#pageSurface()), WCAG_SURFACE_RATIO);
+      if (textOklch) fillOklch = clampLightnessForContrast(fillOklch, textOklch, WCAG_TEXT_RATIO);
+      this.#setAdjustedColor('fill-color', fillOklch);
+    } else {
+      this.#warnIfFailing('fill-color', fillRaw, luminance(this.#pageSurface()), WCAG_SURFACE_RATIO, 'the page');
+    }
+
+    // the fill to check the label against: the one just adjusted, or (if only the label is custom) the resolved default
+    const fillLuminance = fillOklch ? luminance(fillOklch) : this.#computedFillLuminance();
+    if (fillLuminance === null) return;
+    if (textOklch) this.#setAdjustedColor('text-color', clampLightnessForLuminance(textOklch, fillLuminance, WCAG_TEXT_RATIO));
+    else this.#warnIfFailing('text-color', textRaw, fillLuminance, WCAG_TEXT_RATIO, 'the fill');
+  }
+
+  /** @param {'fill-color' | 'text-color'} name @param {import('./contrast.js').Oklch} oklch */
+  #setAdjustedColor(name, oklch) {
+    const prop = `--goo-${name}`, css = formatOklch(oklch);
+    this.#host.style.setProperty(prop, css);
+    this.#ownProps.add(prop);
+  }
+
+  // a color we can't shift (hex, rgb, named...) stays as authored; warns on every change it fails rather than leaving bad contrast silent
+  /** @param {'fill-color' | 'text-color'} name @param {string | null} raw @param {number} againstLuminance @param {number} minRatio @param {string} againstLabel */
+  #warnIfFailing(name, raw, againstLuminance, minRatio, againstLabel) {
+    if (!raw) return;
+    const rawLuminance = resolvedLuminance(raw);
+    if (rawLuminance === null || contrastFromLuminances(rawLuminance, againstLuminance) >= minRatio) return;
+    console.warn(
+      `goo-button: data-goo-${name}="${raw}" doesn't reach ${minRatio}:1 against ${againstLabel}. `
+      + 'Give it as oklch(...) so wcag-color can adjust it, or remove data-goo-wcag-color.',
+      this.#host,
+    );
+  }
+
+  /** The default fill's luminance, resolved from the rendered element (it's declared via light-dark() in CSS, so it can't be computed from the token alone). @returns {number | null} */
+  #computedFillLuminance() { return resolvedLuminance(getComputedStyle(this.#dom.pill).fill); }
+
+  /** @returns {import('./contrast.js').Oklch} */
+  #pageSurface() { return PAGE_SURFACE[getComputedStyle(this.#host).colorScheme.includes('dark') ? 'dark' : 'light']; }
 
   /** @param {string} prop */
   #release(prop) {
@@ -198,6 +275,7 @@ class Goo {
     const dropRadius = radius * Math.max(0, grow.pos);
     const geometry = { height, radius, capX, dropX, dropRadius, reach: height * this.#reach };
 
+    // keeps the button visually centered as it breathes; RTL mirror in dom.js flips this on its own, don't flip the sign here too
     wrap.style.translate = `${-shift / 2 * body.pos}px 0`;
     drop.setAttribute('cx', fixed(dropX)); drop.setAttribute('r', fixed(dropRadius));
     neck.setAttribute('d', neckPath(geometry));

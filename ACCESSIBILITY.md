@@ -9,13 +9,14 @@ goo-button is built on a real `<button>` (or `role="button"`), so baseline acces
 - **Reduced motion.** The module watches `prefers-reduced-motion` live. In that mode the springs are more damped: the motion is still there, just without sharp jumps and settling faster.
 - **disabled and aria-disabled.** Both close the drop and dim the button. Native `disabled` blocks the click, `aria-disabled` doesn't, so you still need to check for it in your own handler.
 - **Icon.** The icon slot is hidden from screen readers (`aria-hidden`), so it doesn't get read as a separate element. If a button is icon-only with no text, it needs its own `aria-label`, otherwise a warning gets logged for a missing accessible name.
-- **Contrast.** Default colors follow `color-scheme` through `light-dark()`. With custom colors through `data-goo-fill-color` and `data-goo-text-color`, you need to check contrast yourself: text against the fill (4.5:1 under WCAG 1.4.3) and the fill against the page background (3:1 under WCAG 1.4.11). The module doesn't check this for you.
+- **Contrast.** Default colors follow `color-scheme` through `light-dark()`. With custom colors through `data-goo-fill-color` and `data-goo-text-color`, you need to check contrast yourself: text against the fill (4.5:1 under WCAG 1.4.3) and the fill against the page background (3:1 under WCAG 1.4.11). The module doesn't check this for you — unless `data-goo-wcag-color` is also set, in which case an `oklch()` color has its lightness adjusted to the nearest passing ratio, and any other color notation is flagged in the console if it fails. See [configuration](docs/configuration.md#keeping-custom-colors-in-contrast).
+- **RTL.** The drop mirrors for `dir="rtl"` (via `:dir(rtl)`), opening toward the start edge. The icon's own glyph stays upright; only the drop, neck and focus ring mirror.
 
 ## What you still need to check
 
 - **Target size.** The recommended minimum button size is 1.2 x 1.2 rem (WCAG 2.5.8 at a 20px root). The module doesn't constrain size or padding, that's on whoever builds the page.
 - **Accessible name.** If a button has no text and no `aria-label`, a warning gets logged to the console. Add text or an `aria-label`.
-- **RTL.** The drop always opens to the right. It isn't mirrored for RTL layouts or vertical writing modes. That's a documented limitation, not a bug.
+- **Vertical writing modes.** Not mirrored or adapted. That's a documented limitation, not a bug.
 
 ## Known limitations
 

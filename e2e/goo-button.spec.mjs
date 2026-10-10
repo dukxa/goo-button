@@ -5,7 +5,7 @@ const dropX = (page) => page.locator('#demo circle.goo-fill').evaluate((node) =>
 
 test.beforeEach(async ({ page }) => {
   if (process.env.GOO_MIN) {
-    await page.route('**/package/src/goo-button.js', (route) => route.fulfill({ path: 'package/goo-button.min.js', contentType: 'text/javascript' }));
+    await page.route('**/demo/src/goo-button.js', (route) => route.fulfill({ path: 'package/goo-button.min.js', contentType: 'text/javascript' }));
   }
   await page.goto('/demo/');
   await expect(page.locator('#demo .goo-inner')).toBeAttached();
@@ -59,14 +59,14 @@ test("the page's own --goo-* values survive detach", async ({ page }) => {
   const demo = page.locator('#demo');
   await demo.evaluate((node) => node.style.setProperty('--goo-neck-reach', '1.5'));
   await demo.evaluate((node) => node.setAttribute('data-goo-gap', '0.4'));
-  await demo.evaluate(async (node) => (await import('/package/src/goo-button.js')).detach(node));
+  await demo.evaluate(async (node) => (await import('/demo/src/goo-button.js')).detach(node));
   expect(await demo.evaluate((node) => node.style.getPropertyValue('--goo-neck-reach'))).toBe('1.5');
   expect(await demo.evaluate((node) => node.style.getPropertyValue('--goo-gap'))).toBe('');
 });
 
 test('detach restores the original children', async ({ page }) => {
   const demo = page.locator('#demo');
-  await demo.evaluate(async (node) => (await import('/package/src/goo-button.js')).detach(node));
+  await demo.evaluate(async (node) => (await import('/demo/src/goo-button.js')).detach(node));
   await expect(demo.locator('.goo-inner')).toHaveCount(0);
   await expect(demo).not.toHaveClass(/goo-button/);
   await expect(demo).toContainText('Press me');

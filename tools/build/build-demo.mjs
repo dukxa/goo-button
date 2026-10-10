@@ -26,3 +26,15 @@ await build({
   target: 'es2022',
   legalComments: 'none',
 });
+
+// same reason: the accent swatch and favicon reuse the library's own contrast math
+// (demo/src/app.js imports this directly) instead of keeping a second copy of it
+await build({
+  entryPoints: [resolvePath('../../package/src/contrast.js')],
+  outfile: resolvePath('../../demo/src/contrast.js'),
+  bundle: true,
+  format: 'esm',
+  minify: false,
+  target: 'es2022',
+  legalComments: 'none',
+});

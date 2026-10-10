@@ -15,6 +15,7 @@
     "package/src/dom.js",
     "package/src/tokens.js",
     "package/src/shape.js",
-    "package/src/spring.js"
+    "package/src/spring.js",
+    "package/src/contrast.js"
   ]
 }

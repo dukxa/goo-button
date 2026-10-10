@@ -96,6 +96,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: var(--font-heading); fo
 .enter-section--7 { animation-delay: 600ms; }
 .enter-section--8 { animation-delay: 700ms; }
 .enter-section--9 { animation-delay: 800ms; }
+.enter-section--10 { animation-delay: 900ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .enter-section {
@@ -424,6 +425,10 @@ fieldset.picker { min-width: 0; padding: 0; border: 0; }
 .switch-title { font-size: var(--font-sm); cursor: pointer; }
 .switch-hint { font-size: var(--font-xs); line-height: 1.4; color: var(--text-muted); text-wrap: pretty; }
 
+/* same switch-row look, but as an accordion panel's content instead of its own card */
+.switch-rows { display: grid; }
+.switch-rows > :first-child { margin-top: var(--space-3); }
+
 .toggle {
   appearance: none;
   position: relative;
@@ -447,11 +452,10 @@ fieldset.picker { min-width: 0; padding: 0; border: 0; }
   border-radius: 62.5rem;
   background: var(--surface);
   transform-origin: left center;
-  transition: translate var(--time) var(--ease-out), scale var(--time-press) var(--ease-out);
+  transition: translate var(--time-fast) var(--ease-out);
 }
 .toggle:checked::after { translate: 1.1875rem 0; transform-origin: right center; }
 [dir="rtl"] .toggle:checked::after { translate: -1.1875rem 0; transform-origin: left center; }
-.toggle:active::after { scale: 1.2857 1; } /* stretch from 1.3125rem to 1.6875rem */
 .toggle:focus-visible { outline: var(--focus); outline-offset: var(--space-3); }
 
 /* --control (the toggle track) is deliberately left out here */
@@ -491,7 +495,7 @@ fieldset.picker { min-width: 0; padding: 0; border: 0; }
 @media (prefers-reduced-motion: reduce) {
   .reset-button svg, .accordion-chevron, .accordion-panel, .slider .thumb, .toggle::after { transition: none; }
   .icon-button { transition-property: background-color, color; }
-  .icon-button:not(:disabled):active, .toggle:active::after { scale: 1; }
+  .icon-button:not(:disabled):active { scale: 1; }
   .icon-button:not(:disabled):active { background: var(--hover); }
   .theme-icons svg { scale: 1; filter: none; opacity: 0; transition: opacity var(--time-fast) ease; }
   .theme-button[data-mode="light"] .sun-icon, .theme-button[data-mode="dark"] .moon-icon { opacity: 1; transition: opacity var(--time-fast) ease; }

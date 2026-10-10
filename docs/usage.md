@@ -69,7 +69,7 @@ The module follows `prefers-reduced-motion` live. In that mode the springs are d
 ## Limits
 
 - **Clipping.** The drop and the focus ring are drawn outside the button's box. The shape shifts left by half of the drop's travel to stay centered, so about 0.6 × the button height is used on each side (more with a larger `data-goo-gap`). The space isn't reserved. An ancestor with `overflow: hidden` cuts them off, and a clipped focus ring makes keyboard focus invisible.
-- **Direction.** The drop always opens to the right. Right-to-left layouts and vertical writing modes aren't mirrored.
+- **Direction.** The drop mirrors for `dir="rtl"` (via `:dir(rtl)`), opening toward the start edge instead of the end; the icon itself is never mirrored, so its glyph stays upright. Vertical writing modes aren't mirrored.
 - **Size.** Keep the button at least 1.2 × 1.2 rem (the WCAG 2.5.8 target size, with a 20-pixel root). The component doesn't clamp size or padding.
 - **Detach.** `detach` returns the icon to the end of the button, which can differ from its original position.
 - **Long labels** wrap by default. `--goo-white-space: nowrap` keeps one line.

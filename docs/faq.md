@@ -12,7 +12,7 @@ Buttons that need a noticeable hover without giving up a real button. `data-goo`
 - It works on a page with a strict CSP and Trusted Types.
 - Each button is tuned with its own attributes, without touching the component's code.
 
-What it doesn't do: it doesn't mirror the drop for RTL, and it doesn't reserve space for it (see [limits](usage.md#limits)).
+What it doesn't do: it doesn't reserve space for the drop, which spills outside the button's box (see [limits](usage.md#limits)). The drop itself does mirror for RTL.
 
 ## Why does a button weigh 6 KB
 
@@ -20,9 +20,9 @@ Numbers for v1.2.4:
 
 | Form | Size |
 | --- | --- |
-| minified | <!--size:min-->14676 B<!--/size--> |
-| gzip | <!--size:gzip-->6072 B<!--/size--> |
-| brotli | <!--size:brotli-->5416 B<!--/size--> |
+| minified | <!--size:min-->17779 B<!--/size--> |
+| gzip | <!--size:gzip-->7334 B<!--/size--> |
+| brotli | <!--size:brotli-->6526 B<!--/size--> |
 
 The browser downloads the gzip or brotli version, so 5 or 6 KB. The file holds everything the button needs to work without any outside files:
 

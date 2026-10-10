@@ -13,6 +13,7 @@ Each option is a `data-goo-<name>` attribute on the button. All of them except `
 | `data-goo-neck-reach` | How far the neck stretches before it breaks | `0.72` | × height (0-4) |
 | `data-goo-fill-color` | Button, drop and focus ring color | `light-dark(oklch(0.2 0.04 200), oklch(0.94 0.03 200))` | any CSS color |
 | `data-goo-text-color` | Label and icon color | `light-dark(oklch(97% 0 0), oklch(15% 0 0))` | any CSS color |
+| `data-goo-wcag-color` | Keep `fill-color` and `text-color` at a passing WCAG contrast | not set | boolean |
 | `data-goo-press-scale` | Scale while pressed | `0.96` | 0.5-1.5 |
 | `data-goo-press-time` | Press transition | `0.16` | s |
 | `data-goo-focus-width` | Focus ring stroke width | `0.125` | rem |
@@ -38,6 +39,19 @@ Values are checked by type, never guessed:
 - Every value must pass the browser's own CSS parser. It must not contain `url(`, `image-set(`, `expression(`, a comment opener, or any of `; { } < > \`, and it must be shorter than 120 characters.
 
 A rejected value is ignored and logged with `console.warn`.
+
+## Keeping custom colors in contrast
+
+`data-goo-wcag-color` keeps `data-goo-fill-color` and `data-goo-text-color` at a passing contrast while it's set: the fill against the page at 3:1 (WCAG 1.4.11), the label against the fill at 4.5:1 (WCAG 1.4.3). It only acts on colors you've set yourself — the built-in `light-dark()` defaults already pass.
+
+- Set the color as `oklch(...)` and it's adjusted in place: only lightness moves, toward whichever side already clears the ratio, so hue and chroma stay exactly what you chose.
+- Set it any other way — `#ff0000`, `rgb(...)`, a named color — and it's left as authored. If it fails the ratio, the console warns with the color, the ratio it missed, and what to do: give it as `oklch(...)` so it can be adjusted, or remove `data-goo-wcag-color`. A color that already passes never warns.
+
+```html
+<button type="button" data-goo data-goo-wcag-color data-goo-fill-color="oklch(0.55 0.22 27)">Delete</button>
+```
+
+The page leg (3:1) can't see an arbitrary ancestor's real background, so it checks against the same light/dark pair `light-dark()` itself represents — a reasonable default, not a guarantee on a page with a tinted or image background.
 
 ## CSS only
 

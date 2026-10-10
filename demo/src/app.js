@@ -1,5 +1,6 @@
 import { GooButton } from './goo-button.js';
 import { highlight } from './highlight.min.js';
+import { clampLightnessForContrast, contrastRatio, toLinearSrgb } from './contrast.js';
 
 const byId = (id) => document.getElementById(id);
 const demo = byId('demo');
@@ -117,7 +118,6 @@ function createSlider({ label, hint, min, max, step, initial }, onInput, format)
   sliderObserver.observe(slider);
   let stopGlide = null;
   const stop = () => { stopGlide?.(); stopGlide = null; };
-  input.addEventListener('input', () => { stop(); sync(); onInput(+input.value); });
   // reset: the thumb glides to its default instead of jumping
   const glideTo = (target, onStep, onDone, token) => {
     stop();
@@ -125,6 +125,21 @@ function createSlider({ label, hint, min, max, step, initial }, onInput, format)
     if (from === target) { onDone(); return; }
     stopGlide = tween((progress) => { input.value = from + (target - from) * progress; sync(); onStep(+input.value); }, () => { stopGlide = null; onDone(); }, token);
   };
+  // a click on the track (not a drag, not the keyboard) jumps the native value instantly; replay it as the same glide reset uses
+  let pointerActive = false, dragged = false, beforeDrag = +input.value;
+  input.addEventListener('pointerdown', () => { pointerActive = true; dragged = false; beforeDrag = +input.value; });
+  input.addEventListener('pointermove', () => { if (pointerActive) dragged = true; });
+  input.addEventListener('pointerup', () => { pointerActive = false; });
+  input.addEventListener('pointercancel', () => { pointerActive = false; });
+  input.addEventListener('input', () => {
+    if (pointerActive && !dragged && +input.value !== beforeDrag) {
+      const target = +input.value;
+      input.value = beforeDrag; sync();
+      glideTo(target, (value) => onInput(value), () => onInput(target));
+      return;
+    }
+    stop(); sync(); onInput(+input.value);
+  });
 
   row.append(labelNode, output);
   if (hint) {
@@ -181,15 +196,9 @@ function buildSliders() {
   }
 }
 
-const toLinear = ([lightness, chroma, hue]) => {
-  const labA = chroma * Math.cos(hue * Math.PI / 180), labB = chroma * Math.sin(hue * Math.PI / 180);
-  const [long, medium, short] = [lightness + 0.3963377774 * labA + 0.2158037573 * labB, lightness - 0.1055613458 * labA - 0.0638541728 * labB, lightness - 0.0894841775 * labA - 1.2914855480 * labB].map((cone) => cone ** 3);
-  return [4.0767416621 * long - 3.3077115913 * medium + 0.2309699292 * short, -1.2684380046 * long + 2.6097574011 * medium - 0.3413193965 * short, -0.0041960863 * long - 0.7034186147 * medium + 1.7076147010 * short]
-    .map((channel) => Math.min(1, Math.max(0, channel)));
-};
-const luminance = (color) => { const [red, green, blue] = toLinear(color); return 0.2126 * red + 0.7152 * green + 0.0722 * blue; };
-const contrast = (colorA, colorB) => { const [lighter, darker] = [luminance(colorA), luminance(colorB)].sort((first, second) => second - first); return (lighter + 0.05) / (darker + 0.05); };
-const toHex = (color) => `#${toLinear(color).map((channel) => Math.round((channel <= 0.0031308 ? 12.92 * channel : 1.055 * channel ** (1 / 2.4) - 0.055) * 255).toString(16).padStart(2, '0')).join('')}`;
+const contrast = contrastRatio;
+// sRGB gamma step only; linear RGB comes from contrast.js
+const toHex = (color) => `#${toLinearSrgb(color).map((channel) => Math.round((channel <= 0.0031308 ? 12.92 * channel : 1.055 * channel ** (1 / 2.4) - 0.055) * 255).toString(16).padStart(2, '0')).join('')}`;
 
 const formatOklch = ([lightness, chroma, hue]) => `oklch(${round(lightness)} ${round(chroma)} ${round(hue)})`;
 const COLORS = {
@@ -221,13 +230,8 @@ function updateContrast() {
   spokenTimer = setTimeout(() => { contrastSpoken.textContent = contrastView.textContent; }, 600);
 }
 
-// accent stops once the fill gets too close to the page, the favicon follows the accent
-function getAccent() {
-  let [lightness, chroma, hue] = currentColors['fill-color'];
-  const surface = getSurface(isDark()), step = isDark() ? 0.01 : -0.01;
-  for (let i = 0; i < 100 && contrast([lightness, chroma, hue], surface) < 3 && lightness >= 0 && lightness <= 1; i++) lightness += step;
-  return [Math.min(1, Math.max(0, lightness)), chroma, hue];
-}
+// accent stops once the fill gets too close to the page (same clamp data-goo-wcag-color uses), the favicon follows the accent
+const getAccent = () => clampLightnessForContrast(currentColors['fill-color'], getSurface(isDark()), 3);
 
 function updateAccent() {
   const rootStyle = document.documentElement.style;
@@ -325,24 +329,33 @@ function buildPickers() {
   updateFavicon();
 }
 
+// one item open at a time across every .accordion card together (they're separate cards only for
+// visual grouping, not separate exclusive groups): opening Accessibility closes Shape and vice
+// versa. Arrow-key navigation stays scoped to the trigger's own card, since Home/End jumping into
+// a visually distinct card reads as a different list. Which item starts open comes from the
+// markup's own data-open.
 function buildAccordion() {
-  const items = [...document.querySelectorAll('.accordion-item')];
+  const groups = [...document.querySelectorAll('.accordion')].map((accordion) => [...accordion.querySelectorAll('.accordion-item')]);
+  const items = groups.flat();
   const triggers = items.map((item) => item.querySelector('.accordion-trigger'));
   const open = (target) => items.forEach((item, index) => {
     const expand = item === target;
     item.toggleAttribute('data-open', expand);
     triggers[index].setAttribute('aria-expanded', String(expand));
   });
-  triggers.forEach((trigger, index) => {
-    trigger.addEventListener('click', () => open(items[index].hasAttribute('data-open') ? null : items[index]));
+  items.forEach((item, index) => {
+    const trigger = triggers[index];
+    const group = groups.find((members) => members.includes(item));
+    const groupTriggers = group.map((member) => triggers[items.indexOf(member)]);
+    const indexInGroup = group.indexOf(item);
+    trigger.addEventListener('click', () => open(item.hasAttribute('data-open') ? null : item));
     trigger.addEventListener('keydown', (event) => {
-      const nextIndex = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: triggers.length - 1 }[event.key];
+      const nextIndex = { ArrowDown: indexInGroup + 1, ArrowUp: indexInGroup - 1, Home: 0, End: groupTriggers.length - 1 }[event.key];
       if (nextIndex === undefined) return;
       event.preventDefault();
-      triggers[(nextIndex + triggers.length) % triggers.length].focus();
+      groupTriggers[(nextIndex + groupTriggers.length) % groupTriggers.length].focus();
     });
   });
-  open(items[0]);
 }
 
 function setupPreviewScheme() {
@@ -380,6 +393,24 @@ function setupKeepOpen() {
   return toggle;
 }
 
+// preview-only: direction is page layout, not a button setting, so it never lands in the generated snippet
+function setupRtl() {
+  const toggle = byId('rtl-preview');
+  toggle.addEventListener('change', () => demo.setAttribute('dir', toggle.checked ? 'rtl' : 'ltr'));
+  return toggle;
+}
+
+function setupWcagColor() {
+  const toggle = byId('wcag-color');
+  const apply = () => {
+    if (toggle.checked) { demo.setAttribute('data-goo-wcag-color', ''); changed.set('wcag-color', ''); }
+    else { demo.removeAttribute('data-goo-wcag-color'); changed.delete('wcag-color'); }
+    printCode();
+  };
+  toggle.addEventListener('change', apply);
+  return toggle;
+}
+
 // storage blocked: the choice just won't persist
 const storeTheme = (next) => { try { next === null ? localStorage.removeItem('goo-theme') : localStorage.setItem('goo-theme', next); } catch {} };
 
@@ -411,7 +442,9 @@ function setupTheme() {
   requestAnimationFrame(() => button.setAttribute('data-ready', ''));
 }
 
-const ORDER = [...Object.values(CONTROLS).flat().map((control) => control.attr), ...Object.keys(COLORS)];
+const ORDER = [...Object.values(CONTROLS).flat().map((control) => control.attr), 'wcag-color', ...Object.keys(COLORS)];
+// attrs with no value (boolean, like data-goo-open): present means "set", with nothing after the name
+const BOOLEAN_KEYS = new Set(['wcag-color']);
 const buttonLabel = demo.textContent.trim();
 const attrString = (node, names = [...node.attributes].map((attr) => attr.name)) =>
   names.filter((name) => node.hasAttribute(name)).map((name) => `${name}="${node.getAttribute(name)}"`).join(' ');
@@ -426,7 +459,7 @@ function iconMarkup() {
 }
 
 function printCode() {
-  const attrs = ['data-goo', ...ORDER.filter((key) => changed.has(key)).map((key) => `data-goo-${key}="${changed.get(key)}"`)].join(' ');
+  const attrs = ['data-goo', ...ORDER.filter((key) => changed.has(key)).map((key) => BOOLEAN_KEYS.has(key) ? `data-goo-${key}` : `data-goo-${key}="${changed.get(key)}"`)].join(' ');
   byId('code-html').textContent = `<button type="button" ${attrs}>\n  ${buttonLabel}${iconMarkup()}\n</button>`;
   highlight(byId('code-html'));
   fitCode(byId('code-html').closest('pre'));
@@ -472,13 +505,15 @@ function setupCopy() {
   });
 }
 
-function setupReset(syncMotion, keepOpen) {
+function setupReset(syncMotion, keepOpen, rtlPreview, wcagColor) {
   const button = byId('reset-button');
   const icon = button.querySelector('svg');
   let angle = 0;
   button.addEventListener('click', () => {
     resets.forEach((reset) => reset());
     keepOpen.checked = false; demo.toggleAttribute('data-goo-open', false);
+    rtlPreview.checked = false; demo.setAttribute('dir', 'ltr');
+    wcagColor.checked = false; demo.removeAttribute('data-goo-wcag-color'); changed.delete('wcag-color');
     GooButton.motion = 'auto';
     syncMotion();
     printCode();
@@ -507,7 +542,7 @@ buildPickers();
 buildAccordion();
 setupTheme();
 setupPreviewScheme();
-setupReset(setupMotion(), setupKeepOpen());
+setupReset(setupMotion(), setupKeepOpen(), setupRtl(), setupWcagColor());
 setupCopy();
 setupCodeBlocks();
 printCode();

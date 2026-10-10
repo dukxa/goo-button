@@ -46,6 +46,14 @@ const STYLES = `
   shape-rendering: geometricPrecision;
   pointer-events: none;
 }
+/* RTL: x is computed left-to-right in script, so the mirror has to flip the whole .goo-inner, not
+   each layer on its own (an icon mirrored around its own center wouldn't move). Label and icon
+   content are mirrored back so they still read normally. The flip sits on the host, one level up,
+   so it never shares scale (and its transition) with the press effect — compositing both caused
+   the flip itself to animate through the press transition on toggle. */
+:where(.goo-button):dir(rtl) { scale: -1 1; }
+:where(.goo-button):dir(rtl) .goo-label,
+:where(.goo-button):dir(rtl) .goo-icon > * { scale: -1 1; }
 .goo-shape .goo-fill { fill: var(--fill-color); pointer-events: visiblePainted; transition: fill ${COLOR_EASE}; }
 .goo-shape .goo-ring { fill: none; stroke: var(--fill-color); stroke-width: var(--goo-focus-width, .125rem); opacity: 0; transition: stroke ${COLOR_EASE}; }
 

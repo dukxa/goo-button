@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@mdn/browser-compat-data": "^8.1.4",
-    "@playwright/test": "^1.63.0",
+    "@mdn/browser-compat-data": "^8.1.5",
+    "@playwright/test": "^1.64.0",
     "caniuse-lite": "^1.0.30001815",
     "esbuild": "0.28.2",
     "prismjs": "1.30.0",

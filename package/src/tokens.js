@@ -27,7 +27,9 @@ export const SPEC = {
 export const GEOMETRY_TOKENS = new Set(['gap', 'neck-reach', 'focus-offset', 'icon-size']);
 /** @type {Record<'delay' | 'stiffness' | 'damping', [number, number, number]>} */
 export const OPTIONS = { delay: [0, 0, 5000], stiffness: [1, .1, 10], damping: [.5, .1, 10] };
-export const DATA_ATTRS = [...Object.keys(SPEC), ...Object.keys(OPTIONS), 'open'].map((name) => `data-goo-${name}`);
+// booleans, same family as `open`: presence toggles them, there's no CSS custom property
+export const BOOLEAN_ATTRS = ['open', 'wcag-color'];
+export const DATA_ATTRS = [...Object.keys(SPEC), ...Object.keys(OPTIONS), ...BOOLEAN_ATTRS].map((name) => `data-goo-${name}`);
 
 // FIXME: denylist, not a parser, a future css function that fetches (like cross-fade() some day) slips through until added here
 const UNSAFE = /url\(|image-set\(|expression\(|\/\*|[;{}<>\\]/i;
